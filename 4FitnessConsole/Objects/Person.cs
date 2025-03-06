@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _4FitnessConsole.Objects
+namespace BasicProgram.Objects
 {
-    class Person
+    public class Person
     {
         public double Weight { get; set; }
 
@@ -46,6 +46,7 @@ namespace _4FitnessConsole.Objects
         public enum GoalEnum
         {
             Abnehmen,
+            GewichtHalten,
             Zunehmen,
             MuskelnAufbauen
         }

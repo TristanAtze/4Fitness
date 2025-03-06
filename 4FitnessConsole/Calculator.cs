@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BasicProgram.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,9 @@ namespace BasicProgram
 
 
 
-        public static (double, string) CalculateBMI()
+        public static (double, string) CalculateBMI(Person person)
         {
-            bmi = weight / (height * height);
+            bmi = person.Weight / (person.Height * person.Height);
             string kategorie = bmi switch
             {
                 < 18.5 => "Untergewicht",
@@ -34,13 +35,13 @@ namespace BasicProgram
             return (bmi, kategorie);
         }
 
-        public static double CalculateProtein()
+        public static double CalculateProtein(Person person)
         {
-            return goal switch
+            return Person.GoalEnum switch
             {
-                3 => weight * 2.2,
-                0 => weight * 1.8,
-                _ => weight * 1.5
+                Person.GoalEnum.MuskelnAufbauen => person.Weight * 2.2,
+                Person.GoalEnum.Abnehmen => person.Weight * 1.8,
+                _ => person.Weight * 1.5
             };
         }
 
