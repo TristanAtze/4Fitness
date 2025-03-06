@@ -37,7 +37,7 @@ namespace BasicProgram
 
         public static double CalculateProtein(Person person)
         {
-            return Person.GoalEnum switch
+            return person.Goal.Item1 switch
             {
                 Person.GoalEnum.MuskelnAufbauen => person.Weight * 2.2,
                 Person.GoalEnum.Abnehmen => person.Weight * 1.8,
@@ -45,23 +45,67 @@ namespace BasicProgram
             };
         }
 
-        public static double BerechneKreatinDosis()
+        public static double BerechneKreatinDosis(Person person)
         {
-            return experienceLevel switch
+            return person.Experience switch
             {
-                2 => weight * 0.04,
-                1 => weight * 0.03,
-                0 => weight * 0.02,
-                _ => weight * 0,
+                Person.ExpEnum.Advanced => person.Weight * 0.04,
+                Person.ExpEnum.Intermediate => person.Weight * 0.03,
+                Person.ExpEnum.Beginner => person.Weight * 0.02,
+                _ => person.Weight * 0,
             };
         }
         public static double CalculateCaloriNeed(Person person)
         {
-            double grundumsatz = person.Geschlecht == "m"
-                ? 66.47m + (13.7m * person.Gewicht) + (5m * person.Groesse * 100) - (6.8m * person.Alter)
-                : 655.1m + (9.6m * person.Gewicht) + (1.8m * person.Groesse * 100) - (4.7m * person.Alter);
+            // Grundumsatz berechnen
+            double grundumsatz = person.Gender == Person.GenderEnum.Male
+                ? 66.47 + (13.7 * person.Weight) + (5 * person.Height * 100) - (6.8 * person.Age)
+                : 655.1 + (9.6 * person.Weight) + (1.8 * person.Height * 100) - (4.7 * person.Age);
 
-            return grundumsatz * person.Aktivitaet;
+            // Aktivitätslevel berücksichtigen
+            double aktivitaetsFaktor = GetActivityMultiplier(person.Activity);
+            double erhaltungsKalorien = grundumsatz * aktivitaetsFaktor;
+
+            // Ziel berücksichtigen (7700 kcal ≈ 1 kg Körpergewicht)
+            var (goal, zielWert) = person.Goal;
+            double zielAnpassung = 0;
+
+            switch (goal)
+            {
+                case Person.GoalEnum.Abnehmen:
+                    double abnahmeProWoche = zielWert ?? 0.5; // Standardwert 0.5 kg/Woche
+                    zielAnpassung = -abnahmeProWoche * 1100; // 7700 kcal/Woche / 7 Tage
+                    break;
+
+                case Person.GoalEnum.Zunehmen:
+                    double zunahmeProWoche = zielWert ?? 0.5;
+                    zielAnpassung = zunahmeProWoche * 1100;
+                    break;
+
+                case Person.GoalEnum.MuskelnAufbauen:
+                    double muskelAufbauProWoche = zielWert ?? 0.25; // Konservativerer Ansatz
+                    zielAnpassung = muskelAufbauProWoche * 1100;
+                    break;
+
+                case Person.GoalEnum.GewichtHalten:
+                default:
+                    zielAnpassung = 0;
+                    break;
+            }
+
+            return erhaltungsKalorien + zielAnpassung;
+        }
+
+        private static double GetActivityMultiplier(Person.ActEnum activity)
+        {
+            return activity switch
+            {
+                Person.ActEnum.sedentary => 1.2,
+                Person.ActEnum.light => 1.375,
+                Person.ActEnum.moderate => 1.55,
+                Person.ActEnum.active => 1.725,
+                _ => 1
+            };
         }
 
     }

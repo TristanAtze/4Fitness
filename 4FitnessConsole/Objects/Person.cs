@@ -50,5 +50,30 @@ namespace BasicProgram.Objects
             Zunehmen,
             MuskelnAufbauen
         }
+
+        public Person(double weight, double height, int age, GenderEnum gender,
+             ExpEnum experience = ExpEnum.Beginner,
+             ActEnum activity = ActEnum.sedentary,
+             (GoalEnum, double?)? goal = null)
+        {
+            // Pflichtfelder Validierung
+            if (weight <= 0)
+                throw new ArgumentException("Gewicht muss größer als 0 sein", nameof(weight));
+
+            if (height <= 0)
+                throw new ArgumentException("Größe muss größer als 0 sein", nameof(height));
+
+            if (age <= 0)
+                throw new ArgumentException("Alter muss größer als 0 sein", nameof(age));
+
+            // Werte zuweisen
+            Weight = weight;
+            Height = height;
+            Age = age;
+            Gender = gender;
+            Experience = experience;
+            Activity = activity;
+            Goal = goal ?? (GoalEnum.GewichtHalten, null);
+        }
     }
 }
