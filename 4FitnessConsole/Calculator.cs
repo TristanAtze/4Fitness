@@ -24,7 +24,7 @@ namespace BasicProgram
 
         public static (double, string) CalculateBMI(Person person)
         {
-            bmi = person.Weight / (person.Height * person.Height);
+            bmi = person.Weight / ((person.Height * person.Height) / 10000);
             string kategorie = bmi switch
             {
                 < 18.5 => "Untergewicht",
@@ -45,13 +45,13 @@ namespace BasicProgram
             };
         }
 
-        public static double BerechneKreatinDosis(Person person)
+        public static double CalculateKreatin(Person person)
         {
             return person.Experience switch
             {
                 Person.ExpEnum.Advanced => person.Weight * 0.04,
-                Person.ExpEnum.Intermediate => person.Weight * 0.03,
-                Person.ExpEnum.Beginner => person.Weight * 0.02,
+                Person.ExpEnum.Intermediate => person.Weight * 0.037,
+                Person.ExpEnum.Beginner => person.Weight * 0.035,
                 _ => person.Weight * 0,
             };
         }
@@ -59,8 +59,8 @@ namespace BasicProgram
         {
             // Grundumsatz berechnen
             double grundumsatz = person.Gender == Person.GenderEnum.Male
-                ? 66.47 + (13.7 * person.Weight) + (5 * person.Height * 100) - (6.8 * person.Age)
-                : 655.1 + (9.6 * person.Weight) + (1.8 * person.Height * 100) - (4.7 * person.Age);
+                ? 66.47 + (13.7 * person.Weight) + (5 * person.Height) - (6.8 * person.Age)
+                : 655.1 + (9.6 * person.Weight) + (1.8 * person.Height) - (4.7 * person.Age);
 
             // Aktivitätslevel berücksichtigen
             double aktivitaetsFaktor = GetActivityMultiplier(person.Activity);
@@ -70,29 +70,12 @@ namespace BasicProgram
             var (goal, zielWert) = person.Goal;
             double zielAnpassung = 0;
 
-            switch (goal)
+            if (goal == Person.GoalEnum.Abnehmen)
             {
-                case Person.GoalEnum.Abnehmen:
-                    double abnahmeProWoche = zielWert ?? 0.5; // Standardwert 0.5 kg/Woche
-                    zielAnpassung = -abnahmeProWoche * 1100; // 7700 kcal/Woche / 7 Tage
-                    break;
-
-                case Person.GoalEnum.Zunehmen:
-                    double zunahmeProWoche = zielWert ?? 0.5;
-                    zielAnpassung = zunahmeProWoche * 1100;
-                    break;
-
-                case Person.GoalEnum.MuskelnAufbauen:
-                    double muskelAufbauProWoche = zielWert ?? 0.25; // Konservativerer Ansatz
-                    zielAnpassung = muskelAufbauProWoche * 1100;
-                    break;
-
-                case Person.GoalEnum.GewichtHalten:
-                default:
-                    zielAnpassung = 0;
-                    break;
+                double abnahmeProWoche = zielWert ?? 0.5; // Standardwert 0.5 kg/Woche
+                zielAnpassung = -abnahmeProWoche * 1100; // 7700 kcal/Woche / 7 Tage
             }
-
+   
             return erhaltungsKalorien + zielAnpassung;
         }
 
