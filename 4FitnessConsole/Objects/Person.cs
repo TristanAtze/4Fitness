@@ -8,6 +8,12 @@ namespace BasicProgram.Objects
 {
     public class Person
     {
+        public int ID { get; set; }
+
+        public int AccountID { get; set; }
+
+        public string Name { get; set; }
+
         public double Weight { get; set; }
 
         public double Height { get; set; }
@@ -21,6 +27,10 @@ namespace BasicProgram.Objects
         public ActEnum Activity { get; set; }
 
         public (GoalEnum, double?) Goal { get; set; }
+
+        public string Password { get; set; }
+
+        public string EMail { get; set; }
 
         public enum GenderEnum
         {
@@ -51,7 +61,8 @@ namespace BasicProgram.Objects
             MuskelnAufbauen
         }
 
-        public Person(double weight, double height, int age, GenderEnum gender,
+        public Person(int id, int accountId, string name, double weight, double height, int age, GenderEnum gender,
+             string password, string email,
              ExpEnum experience = ExpEnum.Beginner,
              ActEnum activity = ActEnum.sedentary,
              (GoalEnum, double?)? goal = null)
@@ -67,6 +78,9 @@ namespace BasicProgram.Objects
                 throw new ArgumentException("Alter muss größer als 0 sein", nameof(age));
 
             // Werte zuweisen
+            ID = id;
+            AccountID = accountId;
+            Name = name;
             Weight = weight;
             Height = height;
             Age = age;
@@ -74,6 +88,8 @@ namespace BasicProgram.Objects
             Experience = experience;
             Activity = activity;
             Goal = goal ?? (GoalEnum.GewichtHalten, null);
+            Password = password;
+            EMail = email;
         }
     }
 }

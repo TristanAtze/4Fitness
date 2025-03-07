@@ -21,7 +21,7 @@ namespace BasicProgram
         private static double bmr = 0;
 
 
-
+        
         public static (double, string) CalculateBMI(Person person)
         {
             bmi = person.Weight / ((person.Height * person.Height) / 10000);
@@ -33,6 +33,8 @@ namespace BasicProgram
                 _ => "Adipositas"
             };
             return (bmi, kategorie);
+
+            //todo Alter und Geschlecht mit einbeziehen
         }
 
         public static double CalculateProtein(Person person)

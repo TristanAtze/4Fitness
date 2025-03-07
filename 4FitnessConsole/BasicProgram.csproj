@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Object-Classes\" />
+    <Compile Remove="Object-Classes\**" />
+    <EmbeddedResource Remove="Object-Classes\**" />
+    <None Remove="Object-Classes\**" />
   </ItemGroup>
 
 </Project>
